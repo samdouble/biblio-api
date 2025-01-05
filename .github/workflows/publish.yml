@@ -22,4 +22,3 @@ jobs:
           doctl serverless connect
           doctl sls deploy .
           doctl sls functions invoke books/getBookByIsbn
-
