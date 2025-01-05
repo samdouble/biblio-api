@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/samdouble/biblio-api/compare/v0.1.2...v0.1.3) (2025-01-05)
+
+
+### Bug Fixes
+
+* add DigitalOcean token to doctl call ([abc254a](https://github.com/samdouble/biblio-api/commit/abc254adca4e81a04139577d568c07510e44c873))
+
 ## [0.1.2](https://github.com/samdouble/biblio-api/compare/v0.1.1...v0.1.2) (2025-01-05)
 
 
