@@ -19,11 +19,8 @@ jobs:
           touch .env
           echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
           doctl serverless install
-          doctl serverless namespaces create \
-            -l ${{ vars.DIGITALOCEAN_LABEL }} \
-            -r ${{ vars.DIGITALOCEAN_REGION }} \
-            -t ${{ secrets.DIGITALOCEAN_API_TOKEN }}
-          doctl serverless connect
+          doctl serverless namespaces list -t ${{ secrets.DIGITALOCEAN_API_TOKEN }}
+          doctl serverless connect -t ${{ secrets.DIGITALOCEAN_API_TOKEN }}
           doctl sls deploy .
           doctl sls functions invoke books/getBookByIsbn
 
