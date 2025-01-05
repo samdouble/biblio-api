@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/samdouble/biblio-api/compare/v0.1.3...v0.1.4) (2025-01-05)
+
+
+### Bug Fixes
+
+* remove doctl namespaces create command ([c321866](https://github.com/samdouble/biblio-api/commit/c321866dc54c842eceefc6ae28b528829ccb4f46))
+
 ## [0.1.3](https://github.com/samdouble/biblio-api/compare/v0.1.2...v0.1.3) (2025-01-05)
 
 
