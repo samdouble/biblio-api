@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/samdouble/biblio-api/compare/v0.1.4...v0.1.5) (2025-01-05)
+
+
+### Bug Fixes
+
+* connect to biblio function namespace ([64a515d](https://github.com/samdouble/biblio-api/commit/64a515da3de8f5d91ff9fed6f9b3746cfe6fe611))
+
 ## [0.1.4](https://github.com/samdouble/biblio-api/compare/v0.1.3...v0.1.4) (2025-01-05)
 
 
