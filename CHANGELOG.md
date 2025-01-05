@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/samdouble/biblio-api/compare/v0.1.5...v0.1.6) (2025-01-05)
+
+
+### Bug Fixes
+
+* call doctl auth init ([bfd2ae0](https://github.com/samdouble/biblio-api/commit/bfd2ae0944a2b28d7776a360519c64c692dcc2e5))
+
 ## [0.1.5](https://github.com/samdouble/biblio-api/compare/v0.1.4...v0.1.5) (2025-01-05)
 
 
