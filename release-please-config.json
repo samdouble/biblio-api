@@ -1,0 +1,8 @@
+{
+  "last-release-sha": "8030c67b71d49d9a253ffc57c9e255c9d74594b5",
+  "packages": {
+    ".": {
+      "release-type": "go"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_API_TOKEN }}
+      - name: Publish
+        run: |
+          doctl serverless connect
+          doctl sls deploy .
+          doctl sls functions invoke books/getBookByIsbn

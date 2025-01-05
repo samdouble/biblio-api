@@ -1,0 +1,12 @@
+environment: 
+  MONGO_URL: "${MONGO_URL}"
+
+packages:
+  - name: blogs
+    functions: 
+      - name: getBookByIsbn
+        runtime: go:1.20
+        limits:
+          timeout: 5000
+          memory: 256
+        web: true
