@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.7](https://github.com/samdouble/biblio-api/compare/v0.1.6...v0.1.7) (2025-01-05)
+
+
+### Bug Fixes
+
+* run ls to debug ([7e71ada](https://github.com/samdouble/biblio-api/commit/7e71ada7ed41af322e17fa968f0c49d879decbcd))
+
 ## [0.1.6](https://github.com/samdouble/biblio-api/compare/v0.1.5...v0.1.6) (2025-01-05)
 
 
