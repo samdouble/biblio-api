@@ -16,6 +16,10 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_API_TOKEN }}
       - name: Publish
         run: |
+          touch .env
+          echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
+          doctl serverless install
           doctl serverless connect
           doctl sls deploy .
           doctl sls functions invoke books/getBookByIsbn
+
