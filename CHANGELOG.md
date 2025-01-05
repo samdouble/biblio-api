@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/samdouble/biblio-api/compare/v0.1.1...v0.1.2) (2025-01-05)
+
+
+### Bug Fixes
+
+* call doctl namespaces create to deploy function ([cc0bf6a](https://github.com/samdouble/biblio-api/commit/cc0bf6aa006b4825cf2b607450ffd5112b6c63f6))
+
 ## [0.1.1](https://github.com/samdouble/biblio-api/compare/v0.1.0...v0.1.1) (2025-01-05)
 
 
