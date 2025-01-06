@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.8](https://github.com/samdouble/biblio-api/compare/v0.1.7...v0.1.8) (2025-01-06)
+
+
+### Bug Fixes
+
+* fixed publish workflow ([5abd2f7](https://github.com/samdouble/biblio-api/commit/5abd2f7241a64577638e0ab46ef468a763588795))
+
 ## [0.1.7](https://github.com/samdouble/biblio-api/compare/v0.1.6...v0.1.7) (2025-01-05)
 
 
