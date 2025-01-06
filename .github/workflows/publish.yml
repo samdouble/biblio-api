@@ -14,14 +14,13 @@ jobs:
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_API_TOKEN }}
-      - name: Publish
+      - name: Create .env file
         run: |
           touch .env
           echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
-          ls
+      - name: Publish
+        run: |
           doctl serverless install
-          doctl auth init \
-            -t ${{ secrets.DIGITALOCEAN_API_TOKEN }}
           doctl serverless connect ${{ vars.DIGITALOCEAN_LABEL }} \
             -t ${{ secrets.DIGITALOCEAN_API_TOKEN }}
           doctl serverless deploy .
