@@ -1,7 +1,7 @@
 package types
 
 type Event struct {
-	Name string `json:"name"`
+	Isbn string `json:"isbn"`
 }
 
 type Response struct {
