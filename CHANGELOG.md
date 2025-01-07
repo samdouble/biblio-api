@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/samdouble/biblio-api/compare/v0.2.0...v0.3.0) (2025-01-07)
+
+
+### Features
+
+* pass isbn as a param to the function ([683ecc9](https://github.com/samdouble/biblio-api/commit/683ecc9d81f46685b2b4fac088e585edbe457c0d))
+
 ## [0.2.0](https://github.com/samdouble/biblio-api/compare/v0.1.8...v0.2.0) (2025-01-07)
 
 
