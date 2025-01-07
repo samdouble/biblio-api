@@ -25,4 +25,4 @@ jobs:
           doctl serverless connect ${{ vars.DIGITALOCEAN_LABEL }} \
             -t ${{ secrets.DIGITALOCEAN_API_TOKEN }}
           doctl serverless deploy .
-          doctl serverless functions invoke books/getBookByIsbn
+          doctl serverless functions invoke books/getBookByIsbn -p isbn:0735619670

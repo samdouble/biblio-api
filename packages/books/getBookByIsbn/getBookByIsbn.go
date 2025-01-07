@@ -16,7 +16,13 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
 	fmt.Println(client)
 	defer db.CloseClientDB()
 
-	response, err := http.Get("https://www.googleapis.com/books/v1/volumes?q=isbn:0735619670")
+	response, err := http.Get(
+		fmt.Sprintf(
+			"https://www.googleapis.com/books/v1/volumes?q=isbn:%s&key=%s",
+			event.Isbn,
+			os.Getenv("GOOGLE_BOOKS_API_TOKEN"),
+		),
+	)
     if err != nil {
         fmt.Print(err.Error())
         os.Exit(1)
@@ -27,11 +33,8 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
     }
     fmt.Println(string(responseData))
 
-	if event.Name == "" {
-		event.Name = "stranger"
-	}
 	version := ctx.Value("function_version").(string)
 	return types.Response {
-		Body: "Hello " + event.Name + "! This is function version " + version,
+		Body: "Hello " + event.Isbn + "! This is function version " + version,
 	}, nil
 }

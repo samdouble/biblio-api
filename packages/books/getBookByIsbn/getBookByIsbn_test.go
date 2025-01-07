@@ -9,11 +9,11 @@ import (
 func TestSimpleReturn(t *testing.T) {
 	ctx := context.Background()
     ctx = context.WithValue(ctx, "function_version", "Test")
-    event := types.Event{Name: "samdouble"}
+    event := types.Event{Isbn: "0735619670"}
     msg, err := Main(ctx, event)
 
-	want := "Hello samdouble! This is function version Test"
+	want := "Hello 0735619670! This is function version Test"
     if msg.Body != want || err != nil {
-        t.Fatalf(`Hello("Gladys") = %q, %v, want match for %#q, nil`, msg, err, want)
+        t.Fatalf(`TestSimpleReturn = %q, %v, want match for %#q, nil`, msg, err, want)
     }
 }
