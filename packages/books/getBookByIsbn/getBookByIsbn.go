@@ -2,20 +2,30 @@ package main
 
 import (
 	"context"
+	"fmt"
+    "io/ioutil"
+    "log"
+    "net/http"
 	"os"
-    "go.mongodb.org/mongo-driver/v2/mongo"
-    "go.mongodb.org/mongo-driver/v2/mongo/options"
-    "go.mongodb.org/mongo-driver/v2/mongo/readpref"
+	"biblio-api/db"
 	"biblio-api/types"
 )
 
 func Main(ctx context.Context, event types.Event) (types.Response, error) {
-	client, _ := mongo.Connect(options.Client().ApplyURI(os.Getenv("MONGO_URL")))
-	defer func() {
-		if err = client.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-	}()
+	client := db.ResolveClientDB(os.Getenv("MONGO_URL"))
+	fmt.Println(client)
+	defer db.CloseClientDB()
+
+	response, err := http.Get("https://www.googleapis.com/books/v1/volumes?q=isbn:0735619670")
+    if err != nil {
+        fmt.Print(err.Error())
+        os.Exit(1)
+    }
+    responseData, err := ioutil.ReadAll(response.Body)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(string(responseData))
 
 	if event.Name == "" {
 		event.Name = "stranger"
