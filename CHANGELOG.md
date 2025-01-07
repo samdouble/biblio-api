@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0](https://github.com/samdouble/biblio-api/compare/v0.1.8...v0.2.0) (2025-01-07)
+
+
+### Features
+
+* connect to MongoDB database ([53ff3ba](https://github.com/samdouble/biblio-api/commit/53ff3bac053f07119ce8aa4b13a0668d88674374))
+* make a simple call to Google Books API ([39b06e8](https://github.com/samdouble/biblio-api/commit/39b06e8037128dd5a4370362347860bec1eb91d5))
+
 ## [0.1.8](https://github.com/samdouble/biblio-api/compare/v0.1.7...v0.1.8) (2025-01-06)
 
 
