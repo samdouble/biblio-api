@@ -18,6 +18,7 @@ jobs:
         run: |
           touch .env
           echo "GOOGLE_BOOKS_API_TOKEN=${{ secrets.GOOGLE_BOOKS_API_TOKEN }}" >> .env
+          echo "MONGO_DBNAME=${{ secrets.MONGO_DBNAME }}" >> .env
           echo "MONGO_URL=${{ secrets.MONGO_URL }}" >> .env
       - name: Publish
         run: |
