@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/samdouble/biblio-api/compare/v0.3.0...v0.4.0) (2025-01-10)
+
+
+### Features
+
+* save Google Books API call to MongoDB ([7d4f427](https://github.com/samdouble/biblio-api/commit/7d4f427992e5c705e2cca378188ad8e086a8578c))
+
 ## [0.3.0](https://github.com/samdouble/biblio-api/compare/v0.2.0...v0.3.0) (2025-01-07)
 
 
