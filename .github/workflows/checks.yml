@@ -28,6 +28,7 @@ jobs:
       - name: Lint and Test
         working-directory: ${{ matrix.dir }}
         run: |
+          export MONGO_DBNAME=db
           export MONGO_URL=mongodb://localhost:27017
           go get .
           go mod tidy

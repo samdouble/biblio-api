@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
     "io/ioutil"
     "log"
     "net/http"
@@ -11,10 +12,16 @@ import (
 	"biblio-api/types"
 )
 
+type Book struct {
+    ID    int `bson:"_id"`
+    Title string
+}
+
 func Main(ctx context.Context, event types.Event) (types.Response, error) {
 	client := db.ResolveClientDB(os.Getenv("MONGO_URL"))
-	fmt.Println(client)
 	defer db.CloseClientDB()
+
+	booksCollection := client.Database(os.Getenv("MONGO_DBNAME")).Collection("books")
 
 	response, err := http.Get(
 		fmt.Sprintf(
@@ -31,7 +38,16 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
     if err != nil {
         log.Fatal(err)
     }
-    fmt.Println(string(responseData))
+
+	// doc := interface{}{
+	// 	Book{Title: "Cat's Cradle", Author: "Kurt Vonnegut Jr."},
+	// 	Book{Title: "In Memory of Memory", Author: "Maria Stepanova"},
+	// 	Book{Title: "Pride and Prejudice", Author: "Jane Austen"},
+	// }
+	var doc interface{}
+	err = bson.UnmarshalExtJSON([]byte(string(responseData)), true, &doc)
+	result, err := booksCollection.InsertOne(context.Background(), doc)
+	fmt.Println(result)
 
 	version := ctx.Value("function_version").(string)
 	return types.Response {
