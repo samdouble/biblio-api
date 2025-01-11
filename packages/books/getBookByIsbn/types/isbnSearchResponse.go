@@ -7,7 +7,7 @@ import (
 type Item struct {
 	AccessInfo isbnSearch.AccessInfo
 	Etag string
-	GoogleBooksId string
+	GoogleBooksId string `json:"id"`
 	SaleInfo isbnSearch.SaleInfo
 	SelfLink string
 	VolumeInfo isbnSearch.VolumeInfo
