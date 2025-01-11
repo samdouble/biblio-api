@@ -2,28 +2,29 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
-	"go.mongodb.org/mongo-driver/bson"
-    "io/ioutil"
     "log"
     "net/http"
 	"os"
+	"time"
+    "github.com/google/uuid"
 	"biblio-api/db"
 	"biblio-api/types"
 )
 
-type Search struct {
-    ID int `bson:"_id"`
-    Items []interface{} `bson:"items"`
-    Kind string `bson:"kind"`
-	TotalItems int `bson:"totalItems"`
-}
-
 func Main(ctx context.Context, event types.Event) (types.Response, error) {
+	// if event.Isbn == "" {
+	// 	log.Println("ISBN is required")
+	// 	return types.Response{
+	// 		Body: "ISBN is required",
+	// 	}
+	// }
+
 	client := db.ResolveClientDB(os.Getenv("MONGO_URL"))
 	defer db.CloseClientDB()
 
-	booksCollection := client.Database(os.Getenv("MONGO_DBNAME")).Collection("books")
+	searchesCollection := client.Database(os.Getenv("MONGO_DBNAME")).Collection("searches")
 
 	response, err := http.Get(
 		fmt.Sprintf(
@@ -35,28 +36,23 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
     if err != nil {
         log.Fatal(err)
     }
-    responseData, err := ioutil.ReadAll(response.Body)
+
+	isbnSearchResponse := &types.IsbnSearchResponse{}
+	json.NewDecoder(response.Body).Decode(isbnSearchResponse)
+	search := types.Search{
+		Id: uuid.New().String(),
+		CreatedAt: time.Now().UTC(),
+		Isbn: event.Isbn,
+		Result: *isbnSearchResponse,
+	}
+
+	result, err := searchesCollection.InsertOne(context.Background(), search)
     if err != nil {
         log.Fatal(err)
     }
 
-	// doc := interface{}{
-	// 	Book{Title: "Cat's Cradle", Author: "Kurt Vonnegut Jr."},
-	// 	Book{Title: "In Memory of Memory", Author: "Maria Stepanova"},
-	// 	Book{Title: "Pride and Prejudice", Author: "Jane Austen"},
-	// }
-	var doc types.IsbnSearchResponse
-	err = bson.UnmarshalExtJSON([]byte(string(responseData)), true, &doc)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = booksCollection.InsertOne(context.Background(), doc)
-	// log.Println(result, err)
-
-	version := ctx.Value("function_version").(string)
+	jsonResult, err := json.Marshal(result)
 	return types.Response {
-		Body: "Hello " + event.Isbn + "! This is function version " + version,
+		Body: jsonResult,
 	}, nil
 }
