@@ -12,9 +12,11 @@ import (
 	"biblio-api/types"
 )
 
-type Book struct {
-    ID    int `bson:"_id"`
-    Title string
+type Search struct {
+    ID int `bson:"_id"`
+    Items []interface{} `bson:"items"`
+    Kind string `bson:"kind"`
+	TotalItems int `bson:"totalItems"`
 }
 
 func Main(ctx context.Context, event types.Event) (types.Response, error) {
@@ -31,8 +33,7 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
 		),
 	)
     if err != nil {
-        fmt.Print(err.Error())
-        os.Exit(1)
+        log.Fatal(err)
     }
     responseData, err := ioutil.ReadAll(response.Body)
     if err != nil {
@@ -44,10 +45,15 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
 	// 	Book{Title: "In Memory of Memory", Author: "Maria Stepanova"},
 	// 	Book{Title: "Pride and Prejudice", Author: "Jane Austen"},
 	// }
-	var doc interface{}
+	var doc types.IsbnSearchResponse
 	err = bson.UnmarshalExtJSON([]byte(string(responseData)), true, &doc)
-	result, err := booksCollection.InsertOne(context.Background(), doc)
-	fmt.Println(result)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = booksCollection.InsertOne(context.Background(), doc)
+	// log.Println(result, err)
 
 	version := ctx.Value("function_version").(string)
 	return types.Response {
