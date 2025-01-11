@@ -17,12 +17,12 @@ func ResolveClientDB(url string) *mongo.Client {
 
     var err error
     clientOptions := options.Client().ApplyURI(url)
-    client, err = mongo.Connect(context.Background(), clientOptions)
+    client, err = mongo.Connect(context.TODO(), clientOptions)
     if err != nil {
         log.Fatal(err)
     }
 
-    err = client.Ping(context.Background(), nil)
+    err = client.Ping(context.TODO(), nil)
     if err != nil {
         log.Fatal(err)
     }

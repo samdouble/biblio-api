@@ -9,6 +9,9 @@ import (
 	"os"
 	"time"
     "github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/writeconcern"
 	"biblio-api/db"
 	"biblio-api/types"
 )
@@ -46,10 +49,21 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
 		Result: *isbnSearchResponse,
 	}
 
-	result, err := searchesCollection.InsertOne(context.Background(), search)
-    if err != nil {
-        log.Fatal(err)
-    }
+	wc := writeconcern.Majority()
+	transactionOptions := options.Transaction().SetWriteConcern(wc)
+	session, err := client.StartSession()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer session.EndSession(context.TODO())
+
+	result, err := session.WithTransaction(context.TODO(), func(ctx mongo.SessionContext) (interface{}, error) {
+		result, err := searchesCollection.InsertOne(context.TODO(), search)
+		return result, err
+	}, transactionOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	jsonResult, err := json.Marshal(result)
 	return types.Response {
