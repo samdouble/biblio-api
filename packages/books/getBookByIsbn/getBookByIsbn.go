@@ -76,9 +76,12 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
 		if err != nil {
 			return nil, err
 		}
-		booksInsertResult, err := booksCollection.InsertMany(context.TODO(), books)
-		if err != nil {
-			return nil, err
+		var booksInsertResult *mongo.InsertManyResult
+		if len(books) > 0 {
+			booksInsertResult, err = booksCollection.InsertMany(context.TODO(), books)
+			if err != nil {
+				return nil, err
+			}
 		}
 		return booksInsertResult, nil
 	}, transactionOptions)
@@ -87,6 +90,8 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
 	}
 
 	return types.Response {
-		Body: search,
+		Body: types.ResponseBody{
+			Books: books,
+		},
 	}, nil
 }

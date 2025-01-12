@@ -24,6 +24,10 @@ type Event struct {
 	Isbn string `json:"isbn"`
 }
 
+type ResponseBody struct {
+	Books []interface{} `json:"books"`
+}
+
 type Response struct {
-	Body Search `json:"body"`
+	Body ResponseBody `json:"body"`
 }
