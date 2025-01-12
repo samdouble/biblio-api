@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"testing"
 	"biblio-api/types"
@@ -12,12 +13,15 @@ func TestSimpleReturn(t *testing.T) {
     ctx = context.WithValue(ctx, "function_version", "Test")
     event := types.Event{Isbn: "0735619670"}
     msg, err := Main(ctx, event)
-
-    var books []interface{}
-	want := types.ResponseBody{
-        Books: books,
+	var books []interface{}
+	want := types.Response{
+        Body: types.ResponseBody{
+            Books: books,
+        },
     }
-    if !reflect.DeepEqual(msg.Body, want) || err != nil {
-        t.Fatalf(`TestSimpleReturn = %q, %v, want match for %#q, nil`, msg, err, want)
+    fmt.Printf("unmarshalled: %#v\n", msg)
+    fmt.Printf("unmarshalled: %#v\n", want)
+    if !reflect.DeepEqual(msg, want) || err != nil {
+        t.Fatalf(`TestSimpleReturn = %#v, %v want match for %#v, nil`, msg, err, want)
     }
 }

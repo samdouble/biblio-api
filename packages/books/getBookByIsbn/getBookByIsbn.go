@@ -94,9 +94,9 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
 	}
 
 	books := insertResults.([]types.Book)
-	booksInterface := make([]interface{}, len(books))
-    for i, book := range books {
-        booksInterface[i] = book
+	var booksInterface []interface{}
+    for _, book := range books {
+        booksInterface = append(booksInterface, book)
     }
 	return types.Response {
 		Body: types.ResponseBody{
