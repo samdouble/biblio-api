@@ -19,15 +19,15 @@ import (
 func Main(ctx context.Context, event types.Event) (types.Response, error) {
 	// if event.Isbn == "" {
 	// 	log.Println("ISBN is required")
-	// 	return types.Response{
-	// 		Body: "ISBN is required",
-	// 	}
+	// 	return nil, fmt.Errorf("ISBN is required")
 	// }
 
 	client := db.ResolveClientDB(os.Getenv("MONGO_URL"))
 	defer db.CloseClientDB()
 
-	searchesCollection := client.Database(os.Getenv("MONGO_DBNAME")).Collection("searches")
+	database := client.Database(os.Getenv("MONGO_DBNAME"))
+	booksCollection := database.Collection("books")
+	searchesCollection := database.Collection("searches")
 
 	response, err := http.Get(
 		fmt.Sprintf(
@@ -42,11 +42,25 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
 
 	isbnSearchResponse := &types.IsbnSearchResponse{}
 	json.NewDecoder(response.Body).Decode(isbnSearchResponse)
+	searchId := uuid.New().String()
 	search := types.Search{
-		Id: uuid.New().String(),
+		Id: searchId,
 		CreatedAt: time.Now().UTC(),
 		Isbn: event.Isbn,
 		Result: *isbnSearchResponse,
+	}
+	var books []interface{}
+	for _, searchItem := range search.Result.Items {
+		books = append(
+			books,
+			types.Book{
+				Id: uuid.New().String(),
+				CreatedAt: time.Now().UTC(),
+				Isbn: event.Isbn,
+				SearchId: searchId,
+				VolumeInfo: searchItem.VolumeInfo,
+			},
+		)
 	}
 
 	wc := writeconcern.Majority()
@@ -57,16 +71,22 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
 	}
 	defer session.EndSession(context.TODO())
 
-	result, err := session.WithTransaction(context.TODO(), func(ctx mongo.SessionContext) (interface{}, error) {
-		result, err := searchesCollection.InsertOne(context.TODO(), search)
-		return result, err
+	_, err = session.WithTransaction(context.TODO(), func(ctx mongo.SessionContext) (interface{}, error) {
+		_, err := searchesCollection.InsertOne(context.TODO(), search)
+		if err != nil {
+			return nil, err
+		}
+		booksInsertResult, err := booksCollection.InsertMany(context.TODO(), books)
+		if err != nil {
+			return nil, err
+		}
+		return booksInsertResult, nil
 	}, transactionOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	jsonResult, err := json.Marshal(result)
 	return types.Response {
-		Body: jsonResult,
+		Body: search,
 	}, nil
 }

@@ -7,36 +7,36 @@ type Dimensions struct {
 }
 
 type ImageLinks struct {
-	SmallThumbnail string
-	Thumbnail string
-	Small string
-	Medium string
-	Large string
-	ExtraLarge string
+	SmallThumbnail string `json:"smallThumbnail"`
+	Thumbnail string `json:"thumbnail"`
+	Small string `json:"small"`
+	Medium string `json:"medium"`
+	Large string `json:"large"`
+	ExtraLarge string `json:"extraLarge"`
 }
 
 type IndustryIdentifier struct {
-	Type string
-	Identifier string
+	Type string `json:"type"`
+	Identifier string `json:"identifier"`
 }
 
 type VolumeInfo struct {
-	Title string
-	Authors []string
-	Publisher string
-	PublishedDate string
-	Description string
-	IndustryIdentifiers []IndustryIdentifier
-	PageCount int
-	Dimensions Dimensions
-	PrintType string
-	MainCategory string
-	Categories []string
-	AverageRating float64
-	RatingsCount int
-	ContentVersion string
-	ImageLinks ImageLinks
-	Language string
-	InfoLink string
-	CanonicalVolumeLink string
+	Title string `json:"title"`
+	Authors []string `json:"authors"`
+	Publisher string `json:"publisher"`
+	PublishedDate string `json:"publishedDate"`
+	Description string `json:"description"`
+	IndustryIdentifiers []IndustryIdentifier `json:"industryIdentifiers"`
+	PageCount int `json:"pageCount"`
+	Dimensions Dimensions `json:"dimensions"`
+	PrintType string `json:"printType"`
+	MainCategory string `json:"mainCategory"`
+	Categories []string `json:"categories"`
+	AverageRating float64 `json:"averageRating"`
+	RatingsCount int `json:"ratingsCount"`
+	ContentVersion string `json:"contentVersion"`
+	ImageLinks ImageLinks `json:"imageLinks"`
+	Language string `json:"language"`
+	InfoLink string `json:"infoLink"`
+	CanonicalVolumeLink string `json:"canonicalVolumeLink"`
 }
