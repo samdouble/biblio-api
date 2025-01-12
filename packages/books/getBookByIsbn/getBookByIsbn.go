@@ -2,16 +2,15 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
     "log"
-    "net/http"
 	"os"
 	"time"
     "github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/writeconcern"
+	"biblio-api/models"
 	"biblio-api/db"
 	"biblio-api/types"
 )
@@ -26,42 +25,7 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
 	defer db.CloseClientDB()
 
 	database := client.Database(os.Getenv("MONGO_DBNAME"))
-	booksCollection := database.Collection("books")
 	searchesCollection := database.Collection("searches")
-
-	response, err := http.Get(
-		fmt.Sprintf(
-			"https://www.googleapis.com/books/v1/volumes?q=isbn:%s&key=%s",
-			event.Isbn,
-			os.Getenv("GOOGLE_BOOKS_API_TOKEN"),
-		),
-	)
-    if err != nil {
-        log.Fatal(err)
-    }
-
-	isbnSearchResponse := &types.IsbnSearchResponse{}
-	json.NewDecoder(response.Body).Decode(isbnSearchResponse)
-	searchId := uuid.New().String()
-	search := types.Search{
-		Id: searchId,
-		CreatedAt: time.Now().UTC(),
-		Isbn: event.Isbn,
-		Result: *isbnSearchResponse,
-	}
-	var books []interface{}
-	for _, searchItem := range search.Result.Items {
-		books = append(
-			books,
-			types.Book{
-				Id: uuid.New().String(),
-				CreatedAt: time.Now().UTC(),
-				Isbn: event.Isbn,
-				SearchId: searchId,
-				VolumeInfo: searchItem.VolumeInfo,
-			},
-		)
-	}
 
 	wc := writeconcern.Majority()
 	transactionOptions := options.Transaction().SetWriteConcern(wc)
@@ -71,27 +35,72 @@ func Main(ctx context.Context, event types.Event) (types.Response, error) {
 	}
 	defer session.EndSession(context.TODO())
 
-	_, err = session.WithTransaction(context.TODO(), func(ctx mongo.SessionContext) (interface{}, error) {
-		_, err := searchesCollection.InsertOne(context.TODO(), search)
+	insertResults, err := session.WithTransaction(context.TODO(), func(ctx mongo.SessionContext) (interface{}, error) {
+		existingBooks, err := models.GetBooksIfIsbnAlreadyExists(database, event.Isbn)
 		if err != nil {
 			return nil, err
 		}
-		var booksInsertResult *mongo.InsertManyResult
-		if len(books) > 0 {
-			booksInsertResult, err = booksCollection.InsertMany(context.TODO(), books)
+		searchId := uuid.New().String()
+		if len(existingBooks) == 0 {
+			fmt.Println("No existing books found. Fetching from Google Books API.")
+			isbnSearchResponse, err := models.SearchBooksByIsbnFromGoogle(event.Isbn)
 			if err != nil {
 				return nil, err
 			}
+			search := types.Search{
+				Id: searchId,
+				CreatedAt: time.Now().UTC(),
+				Isbn: event.Isbn,
+				Result: isbnSearchResponse,
+			}
+			var books []types.Book
+			for _, searchItem := range search.Result.Items {
+				books = append(
+					books,
+					types.Book{
+						Id: uuid.New().String(),
+						CreatedAt: time.Now().UTC(),
+						Isbn: event.Isbn,
+						SearchId: searchId,
+						VolumeInfo: searchItem.VolumeInfo,
+					},
+				)
+			}
+			_, err = searchesCollection.InsertOne(context.TODO(), search)
+			if err != nil {
+				return nil, err
+			}
+			_, err = models.InsertBooks(database, books)
+			if err != nil {
+				return nil, err
+			}
+			return books, nil
+		} else {
+			fmt.Println(len(existingBooks), "existing books found.")
+			search := types.Search{
+				Id: searchId,
+				CreatedAt: time.Now().UTC(),
+				Isbn: event.Isbn,
+			}
+			_, err = searchesCollection.InsertOne(context.TODO(), search)
+			if err != nil {
+				return nil, err
+			}
+			return existingBooks, nil
 		}
-		return booksInsertResult, nil
 	}, transactionOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	books := insertResults.([]types.Book)
+	booksInterface := make([]interface{}, len(books))
+    for i, book := range books {
+        booksInterface[i] = book
+    }
 	return types.Response {
 		Body: types.ResponseBody{
-			Books: books,
+			Books: booksInterface,
 		},
 	}, nil
 }

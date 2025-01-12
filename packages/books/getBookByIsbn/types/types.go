@@ -6,18 +6,18 @@ import (
 )
 
 type Book struct {
-	Id string `bson:"id"`
-	CreatedAt time.Time `bson:"createdAt"`
-	Isbn string `bson:"isbn"`
-	SearchId string `bson:"searchId"`
-	VolumeInfo isbnSearch.VolumeInfo `bson:"volumeInfo"`
+	Id string `json:"id" bson:"id"`
+	CreatedAt time.Time `json:"createdAt" bson:"createdAt"`
+	Isbn string `json:"isbn" bson:"isbn"`
+	SearchId string `json:"searchId" bson:"searchId"`
+	VolumeInfo isbnSearch.VolumeInfo `json:"volumeInfo" bson:"volumeInfo"`
 }
 
 type Search struct {
-    Id string `bson:"id"`
-	CreatedAt time.Time `bson:"createdAt"`
-	Isbn string `bson:"isbn"`
-	Result IsbnSearchResponse `bson:"result"`
+    Id string `json:"id" bson:"id"`
+	CreatedAt time.Time `json:"createdAt" bson:"createdAt"`
+	Isbn string `json:"isbn" bson:"isbn"`
+	Result *IsbnSearchResponse `json:"result,omitempty" bson:"result,omitempty"`
 }
 
 type Event struct {
