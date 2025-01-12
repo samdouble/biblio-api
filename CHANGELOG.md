@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.0](https://github.com/samdouble/biblio-api/compare/v0.4.0...v0.5.0) (2025-01-12)
+
+
+### Features
+
+* get books from the database if they have already been fetched ([677437f](https://github.com/samdouble/biblio-api/commit/677437f6cc5645a8a0feb7d615ebed7ec32897ce))
+* save books from searches in he database ([3e0961a](https://github.com/samdouble/biblio-api/commit/3e0961abe545897a86d764a13c9aee944e9d720f))
+* save ISBN search result to MongoDB ([44f44de](https://github.com/samdouble/biblio-api/commit/44f44de5065303c4c249c2521b9cf3b1c7dd34d8))
+* save searches ([16a9d9f](https://github.com/samdouble/biblio-api/commit/16a9d9fdebe29823f8801e545f5ad4b3a93a17d7))
+* use MongoDB transactions ([05efd82](https://github.com/samdouble/biblio-api/commit/05efd8271256783cbaee944e0eee4c37ea260bf6))
+
 ## [0.4.0](https://github.com/samdouble/biblio-api/compare/v0.3.0...v0.4.0) (2025-01-10)
 
 
