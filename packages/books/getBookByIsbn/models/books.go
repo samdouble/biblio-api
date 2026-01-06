@@ -13,17 +13,20 @@ import (
 	"biblio-api/utils"
 )
 
+var GoogleBooksAPIBaseURL = "https://www.googleapis.com/books/v1/volumes"
+
 func SearchBooksByIsbnFromGoogle(isbn string) (*types.IsbnSearchResponse, error) {
 	response, err := http.Get(
 		fmt.Sprintf(
-			"https://www.googleapis.com/books/v1/volumes?q=isbn:%s&key=%s",
+			"%s?q=isbn:%s&key=%s",
+			GoogleBooksAPIBaseURL,
 			isbn,
 			os.Getenv("GOOGLE_BOOKS_API_TOKEN"),
 		),
 	)
-    if err != nil {
-        log.Fatal(err)
-    }
+	if err != nil {
+		log.Fatal(err)
+	}
 	isbnSearchResponse := &types.IsbnSearchResponse{}
 	json.NewDecoder(response.Body).Decode(isbnSearchResponse)
 	return isbnSearchResponse, nil
