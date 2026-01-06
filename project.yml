@@ -8,7 +8,7 @@ packages:
   - name: books
     functions: 
       - name: getBookByIsbn
-        runtime: go:1.20
+        runtime: go:1.24
         limits:
           timeout: 5000
           memory: 256
