@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/samdouble/biblio-api/compare/v0.5.0...v0.5.1) (2026-01-07)
+
+
+### Bug Fixes
+
+* revert to go:1.20 (newer runtimes not supported by DO functions ([9c8cb53](https://github.com/samdouble/biblio-api/commit/9c8cb534864539508b3bc76ab80c82dae059021b))
+
 ## [0.5.0](https://github.com/samdouble/biblio-api/compare/v0.4.0...v0.5.0) (2025-01-12)
 
 
